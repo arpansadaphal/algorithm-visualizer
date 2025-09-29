@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import ArrayBar from "./ArrayBar";
 import {
   bubbleSort,
-  insertionSort,
-  selectionSort,
   mergeSort,
   quickSort,
+  insertionSort,
+  selectionSort,
   heapSort,
 } from "./sortingAlgorithms";
 import { linearSearch, binarySearch } from "./searchingAlgorithms";
@@ -18,8 +18,22 @@ export default function App() {
   const [speed, setSpeed] = useState(300);
   const [isRunning, setIsRunning] = useState(false);
   const [target, setTarget] = useState(0);
+  const [arraySize, setArraySize] = useState(10);
 
-  const generateArray = (size = 10) => {
+  // Map algorithm to time complexity
+  const complexities = {
+    "Bubble Sort": "O(n²)",
+    "Insertion Sort": "O(n²)",
+    "Selection Sort": "O(n²)",
+    "Merge Sort": "O(n log n)",
+    "Quick Sort": "O(n log n)",
+    "Heap Sort": "O(n log n)",
+    "Linear Search": "O(n)",
+    "Binary Search": "O(log n)",
+  };
+
+  // Generate random array
+  const generateArray = (size = arraySize) => {
     const arr = Array.from({ length: size }, () => ({
       value: Math.floor(Math.random() * 100),
       color: "skyblue",
@@ -29,7 +43,7 @@ export default function App() {
 
   useEffect(() => {
     generateArray();
-  }, []);
+  }, [arraySize]);
 
   const handleStart = async () => {
     setIsRunning(true);
@@ -100,7 +114,6 @@ export default function App() {
         >
           {mode === "Sorting" ? (
             <>
-              <option>Select</option>
               <option>Bubble Sort</option>
               <option>Insertion Sort</option>
               <option>Selection Sort</option>
@@ -110,7 +123,6 @@ export default function App() {
             </>
           ) : (
             <>
-               <option>Select</option>
               <option>Linear Search</option>
               <option>Binary Search</option>
             </>
@@ -144,6 +156,21 @@ export default function App() {
         <span> {speed} ms</span>
       </div>
 
+      {/* Array size slider */}
+      <div>
+        <label>Array Size: </label>
+        <input
+          type="range"
+          min="5"
+          max="50"
+          step="1"
+          value={arraySize}
+          onChange={(e) => setArraySize(Number(e.target.value))}
+          disabled={isRunning}
+        />
+        <span> {arraySize} elements</span>
+      </div>
+
       {/* Buttons */}
       <div style={{ marginTop: "10px" }}>
         <button onClick={() => generateArray()} disabled={isRunning}>
@@ -153,6 +180,32 @@ export default function App() {
           {mode === "Sorting" ? "Sort" : "Search"}
         </button>
       </div>
+
+      {/* Complexity Display */}
+      <div style={{ marginTop: "10px", fontWeight: "bold" }}>
+        Time Complexity: {complexities[algo]}
+      </div>
+
+      {/* Legend */}
+      <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", gap: "15px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "15px", height: "15px", background: "skyblue" }}></div>
+          <span>Unvisited</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "15px", height: "15px", background: "yellow" }}></div>
+          <span>Comparing</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "15px", height: "15px", background: "red" }}></div>
+          <span>Not Found</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <div style={{ width: "15px", height: "15px", background: "green" }}></div>
+          <span>Sorted / Found</span>
+        </div>
+      </div>
+
 
       {/* Array Visualization */}
       <div
@@ -165,9 +218,12 @@ export default function App() {
           height: "300px",
         }}
       >
+      
+
         {array.map((bar, index) => (
-          <ArrayBar key={index} value={bar.value} color={bar.color} />
+          <ArrayBar key={index} value={bar.value} color={bar.color} size={array.length} />
         ))}
+
       </div>
     </div>
   );
