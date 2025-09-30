@@ -114,6 +114,7 @@ export default function App() {
         >
           {mode === "Sorting" ? (
             <>
+              <option>Select</option>
               <option>Bubble Sort</option>
               <option>Insertion Sort</option>
               <option>Selection Sort</option>
@@ -123,6 +124,7 @@ export default function App() {
             </>
           ) : (
             <>
+              <option>Select</option>
               <option>Linear Search</option>
               <option>Binary Search</option>
             </>
@@ -187,23 +189,44 @@ export default function App() {
       </div>
 
       {/* Legend */}
-      <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", gap: "15px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <div style={{ width: "15px", height: "15px", background: "skyblue" }}></div>
-          <span>Unvisited</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <div style={{ width: "15px", height: "15px", background: "yellow" }}></div>
-          <span>Comparing</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <div style={{ width: "15px", height: "15px", background: "red" }}></div>
-          <span>Not Found</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <div style={{ width: "15px", height: "15px", background: "green" }}></div>
-          <span>Sorted / Found</span>
-        </div>
+      <div
+        style={{
+          marginTop: "20px",
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap", // allow wrapping
+          gap: "10px",
+          rowGap: "8px",
+        }}
+      >
+        {[
+          { color: "skyblue", label: "Unvisited" },
+          { color: "yellow", label: "Comparing" },
+          { color: "red", label: "Not Found" },
+          { color: "green", label: "Sorted / Found" },
+          { color: "orange", label: "Pivot Element" },
+        ].map((item, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              minWidth: "120px", // keeps items balanced
+              fontSize: "0.85rem", // smaller text for mobile
+            }}
+          >
+            <div
+              style={{
+                width: "14px",
+                height: "14px",
+                background: item.color,
+                borderRadius: "2px",
+              }}
+            ></div>
+            <span>{item.label}</span>
+          </div>
+        ))}
       </div>
 
 
@@ -218,12 +241,14 @@ export default function App() {
           height: "300px",
         }}
       >
-      
-
         {array.map((bar, index) => (
-          <ArrayBar key={index} value={bar.value} color={bar.color} size={array.length} />
+          <ArrayBar
+            key={index}
+            value={bar.value}
+            color={bar.color}
+            size={array.length}
+          />
         ))}
-
       </div>
     </div>
   );

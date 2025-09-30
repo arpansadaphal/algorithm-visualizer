@@ -94,20 +94,38 @@ export async function mergeSort(array, setArray, speed) {
 }
 
 // Quick Sort
+// Quick Sort
 export async function quickSort(array, setArray, speed) {
   let arr = array.map((v) => ({ value: v.value ?? v, color: "skyblue" }));
 
   async function partition(low, high) {
     let pivot = arr[high];
+    arr[high].color = "orange"; // mark pivot
+    setArray([...arr]);
+
     let i = low - 1;
     for (let j = low; j < high; j++) {
-      arr[j].color = "yellow";
+      arr[j].color = "yellow"; // comparing
       setArray([...arr]);
       await sleep(speed);
-      if (arr[j].value < pivot.value) [arr[++i], arr[j]] = [arr[j], arr[i]];
-      arr[j].color = "skyblue";
+
+      if (arr[j].value < pivot.value) {
+        i++;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        setArray([...arr]);
+        await sleep(speed);
+      }
+
+      arr[j].color = "skyblue"; // reset
     }
+
+    // place pivot in correct position
     [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+    arr[high].color = "skyblue"; // reset old pivot
+    arr[i + 1].color = "green"; // pivot is in final place
+    setArray([...arr]);
+    await sleep(speed);
+
     return i + 1;
   }
 
@@ -120,9 +138,12 @@ export async function quickSort(array, setArray, speed) {
   }
 
   await quickSortHelper(0, arr.length - 1);
+
+  // Ensure all sorted
   arr.forEach((b) => (b.color = "green"));
   setArray([...arr]);
 }
+
 
 // Heap Sort
 export async function heapSort(array, setArray, speed) {
